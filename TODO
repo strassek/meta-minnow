@@ -1,0 +1,7 @@
+o Refactor the README and remove boiler plate meta-intel stuff, that should be
+  in a single document in meta-intel to avoid errors in updating every BSP with
+  the same information.
+  
+o Create the wiki page:
+  https://wiki.yoctoproject.org/wiki/BSPs/minnow
+

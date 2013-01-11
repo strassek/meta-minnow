@@ -1,0 +1,2 @@
+Add a minnow-noemgd.conf when the gma driver is ready. VESA is a PC BIOS
+construct and not an option with EFI as I understand it.

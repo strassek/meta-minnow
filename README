@@ -1,0 +1,280 @@
+This README file contains information on building the meta-minnow BSP
+layer and booting the images contained in the /binary directory.
+Please see the corresponding sections below for details.
+
+For more information on the Minnow board see:
+http://FIXME
+
+The 'Queens Bay' platform consists of the Intel Atom E640T processor plus the
+Intel EG20T Platform Controller Hub (Tunnel Creek + Topcliff).
+
+It also supports the E6xx embedded on-chip graphics via the Intel
+Embedded Media and Graphics Driver (EMGD).
+
+Information on all Intel embedded platforms can be found here:
+
+  http://www.intel.com/p/en_US/embedded/hwsw/hardware
+
+
+Compliance
+==========
+
+This BSP is compliant with the Yocto Project as per the requirements
+listed here:
+
+  http://www.yoctoproject.org/yocto-project-compatible-registration
+
+
+Dependencies
+============
+
+This layer depends on:
+
+  URI: git://git.openembedded.org/bitbake
+  branch: master
+
+  URI: git://git.openembedded.org/openembedded-core
+  layers: meta
+  branch: master
+
+  URI: git://git.yoctoproject.org/meta-intel
+  layers: intel
+  branch: master
+
+  # Until linux-yocto-dev is available in oe-core
+  URI: git://git.yoctoproject.org/poky-extras
+  layers: meta-kernel-dev
+  branch: master
+
+Patches
+=======
+
+Please submit any patches against this BSP to the Yocto mailing list
+(meta-intel@yoctoproject.org) and cc: the maintainer:
+
+Maintainer: Darren Hart <dvhart@linux.intel.com>
+
+Please see the meta-intel/MAINTAINERS file for more details.
+
+
+Table of Contents
+=================
+
+  I. Building the meta-minnow BSP layer
+ II. Booting the images in /binary
+III. Device Notes
+     a. Firmware
+     b. Serial Port
+     c. HDMI
+     d. Power Reset
+     e. Accelerometer
+     f. GPIO
+     g. MMC
+     h. 802.11
+     i. 802.15.4
+     j. Audio
+     k. Optional Devices
+ IV. Known Issues
+     a. EFI boot fails
+  V. Additional Resources
+
+
+I. Building the meta-minnow BSP layer
+===================================
+
+In order to build an image with BSP support for a given release, you
+need to download the corresponding BSP tarball from the 'Board Support
+Package (BSP) Downloads' page of the Yocto Project website.
+
+Having done that, and assuming you extracted the BSP tarball contents
+at the top-level of your yocto build tree, you can build an minnow image
+by adding the location of the meta-intel and meta-minnow layers to
+bblayers.conf, e.g.:
+
+  yocto/meta-intel \
+  yocto/meta-intel/meta-minnow \
+  yocto/poky-extras/meta-kernel-dev \
+  # FIXME: last line only until linux-yocto-dev is in oe-core
+
+The meta-minnow layer contains support for two different machine
+configurations. These configurations are identical except for the fact
+that the one prefixed with 'minnow' makes use of the Intel-proprietary
+EMGD graphics driver, while the one prefixed with 'minnow-noemgd'
+does not.
+
+If you want to enable the layer that supports EMGD graphics add the
+following to the local.conf file:
+
+  MACHINE ?= "minnow"
+
+The 'minnow' machine includes the emgd-driver-bin package, which has a
+proprietary license that must be whitelisted by adding the string
+"license_emgd-driver-bin" to the LICENSE_FLAGS_WHITELIST variable in
+your local.conf.  For example:
+
+  LICENSE_FLAGS_WHITELIST = "license_emgd-driver-bin"
+
+If you want to enable the layer that does not support EMGD graphics,
+add the following to the local.conf file:
+
+  MACHINE ?= "minnow-noemgd"
+
+You should then be able to build an minnow image as such:
+
+  $ source oe-init-build-env
+  $ bitbake core-image-sato
+
+At the end of a successful build, you should have a live image that
+you can boot from a USB flash drive (see instructions on how to do
+that below, in the section 'Booting the images from /binary').
+
+NOTE: The 'minnow' machine will include support for hardware video
+acceleration via gstreamer if and only if the "commercial" string is
+added to the the LICENSE_FLAGS_WHITELIST variable in your local.conf.
+
+For example:
+
+  LICENSE_FLAGS_WHITELIST = "license_emgd-driver-bin commercial"
+
+The reason this is needed is to prevent the image from including
+anything that might violate the license terms of the packages used to
+implement the the video acceleration feature, such as gst-ffmpeg and
+ffmpeg.  As always, please consult the licenses included in the
+specific packages for details if you use packages that require
+particular LICENSE_FLAGS.
+
+As an alternative to downloading the BSP tarball, you can also work
+directly from the meta-intel git repository.  For each BSP in the
+'meta-intel' repository, there are multiple branches, one
+corresponding to each major release starting with 'laverne' (0.90), in
+addition to the latest code which tracks the current master (note that
+not all BSPs are present in every release).  Instead of extracting a
+BSP tarball at the top level of your yocto build tree, you can
+equivalently check out the appropriate branch from the meta-intel
+repository at the same location.
+
+
+II. Booting the images in /binary
+=================================
+
+This BSP contains bootable live images, which can be used to directly
+boot Yocto off of a USB flash drive.
+
+Under Linux, insert a USB flash drive.  Assuming the USB flash drive
+takes device /dev/sdf, use dd to copy the live image to it.  For
+example:
+
+# dd if=core-image-sato-minnow-20101207053738.hddimg of=/dev/sdf
+# sync
+# eject /dev/sdf
+
+This should give you a bootable USB flash device.  Insert the device
+into one of the USB host ports on the target, and power on.  This
+should result in a system booted to the Sato graphical desktop.
+
+If you want a terminal, use the arrows at the top of the UI to move to
+different pages of available applications, one of which is named
+'Terminal'.  Clicking that should give you a root terminal.
+
+If you want to ssh into the system, you can use the root terminal to
+ifconfig the IP address and use that to ssh in.  The root password is
+empty, so to log in type 'root' for the user name and hit 'Enter' at
+the Password prompt: and you should be in.
+
+If instead of a live image, you would like to prepare an EFI bootable
+partitioned image, use the mkefidisk.sh script provided in the scripts
+directory of this BSP. Future versions of the images have an EFI
+installer integrated into the live image.
+
+----
+
+If you find you're getting corrupt images on the USB (it doesn't show
+the syslinux boot: prompt, or the boot: prompt contains strange
+characters), try doing this first:
+
+# dd if=/dev/zero of=/dev/sdf bs=1M count=512
+
+
+III. Device Notes
+================================
+a. Firmware
+-----------
+The Minnow EFI firmware will search the available devices (USB, SD,
+and SATA) for a valid EFI payload at "EFI\BOOT\BOOTIA32.EFI". If it
+fails to find one, it will launch the EFI shell and optionally execute
+a "startup.nsh" script if it finds the script on the available storage
+devices. It searches the devices in the following order: USB, SD,
+SATA.
+
+b. Serial Port
+--------------
+The UART from the EG20T is connected to an FTDI UART-to-USB device
+which appears as a serial port on the host computer.
+
+When you power on your minnow, your host will discover a serial device
+and name it /dev/ttyUSB0 (or similar). You can communicate with this
+device at 115200 8N1 using your preferred terminal emulator.
+
+FIXME: verify part model, driver, device name, etc.
+
+c. Video
+-------
+The onboard HDMI port is technically a DVI signal driven by the sDVO port. It
+supports a resolution up to 1920x1080. The LVDS lines are available on the
+expansion connector.
+
+d. GPIO
+-------
+WRITEME...
+
+e. MMC
+------
+The microSD card MMC device located on the bottom side of the board can be used
+to boot the device, or as secondary storage.
+
+f. Audio
+--------------------
+The minnow has an 1/8" analog output (nearest the antennae) and a line-in
+input below that. These can be tested
+using the alsa-utils package. The aplay -l command will list both
+playback devices:
+
+# aplay -l
+**** List of PLAYBACK Hardware Devices ****
+card 0: MID [HDA Intel MID], device 0: ALC262 Analog [ALC262 Analog]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 0: MID [HDA Intel MID], device 3: ALC262 Digital [ALC262 Digital]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+
+Using a sample WAV file, you can use aplay to play to either device:
+
+Over analog:
+# aplay -D plughw:0,0 sample.wav
+
+Over HDMI:
+# aplay -D plughw:0,3 sample.wav
+
+The digital lines are available on the expansion connector.
+
+FIXME: verify everything here.
+
+g. Expansion Connector
+----------------------
+FIXME: Describe the expansion connector and reference documentation on all the
+exported signals, pinouts, etc.
+
+IV. Known Issues
+----------------
+a. I'm sure there will be some....
+
+
+V. Additional Resources
+-----------------------
+In addition to this README, please see the following wiki page for tips
+on using the minnow with the Yocto Project:
+
+https://wiki.yoctoproject.org/wiki/BSPs/minnow
+
+FIXME: create the wiki page
