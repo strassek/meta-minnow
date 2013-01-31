@@ -13,3 +13,6 @@ LINUX_VERSION = "3.4.26"
 SRCREV_machine_pn-linux-yocto_minnow ?= "${AUTOREV}"
 SRCREV_meta_pn-linux-yocto_minnow ?= "${AUTOREV}"
 SRCREV_emgd_pn-linux-yocto_minnow ?= "${AUTOREV}"
+
+# Add temporary support for the SYS945x DB9 serial port
+KERNEL_FEATURES_append_minnow="cfg/8250"
