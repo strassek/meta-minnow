@@ -7,6 +7,7 @@ KMACHINE_minnow  = "minnow"
 KBRANCH_minnow = "standard/minnow"
 
 SRC_URI_minnow = "git://git.infradead.org/users/dvhart/linux-yocto-minnow-3.4;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},emgd-1.14;name=machine,meta,emgd"
+SRC_URI_minnow += "file://user.cfg"
 
 LINUX_VERSION = "3.4.26"
 
