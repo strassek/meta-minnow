@@ -22,5 +22,3 @@ SRCREV_emgd_pn-linux-yocto_minnow ?= "${AUTOREV}"
 
 # Functionality flags
 KERNEL_FEATURES_append = " features/netfilter/netfilter.scc"
-# Add temporary support for the SYS945x DB9 serial port
-# KERNEL_FEATURES_append_minnow="cfg/8250"
