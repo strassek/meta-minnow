@@ -16,9 +16,9 @@ COMPATIBLE_MACHINE = "minnow"
 KMACHINE_minnow  = "minnow"
 KBRANCH_minnow = "standard/minnow"
 
-SRCREV_machine_pn-linux-yocto_minnow ?= "${AUTOREV}"
-SRCREV_meta_pn-linux-yocto_minnow ?= "${AUTOREV}"
-SRCREV_emgd_pn-linux-yocto_minnow ?= "${AUTOREV}"
+SRCREV_machine_pn-linux-yocto_minnow ?= "81909ea91b801300d46964d5de70f12789b66a35"
+SRCREV_meta_pn-linux-yocto_minnow ?= "e57037f49c03547f05236c32aa024767dfce7d7f"
+SRCREV_emgd_pn-linux-yocto_minnow ?= "caea08c988e0f41103bbe18eafca20348f95da02"
 
 # Functionality flags
 KERNEL_FEATURES_append = " features/netfilter/netfilter.scc"
