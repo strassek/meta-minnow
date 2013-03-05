@@ -12,7 +12,7 @@ LINUX_VERSION ?= "3.8.0"
 PR = "${INC_PR}.3"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-COMPATIBLE_MACHINE_minnow = "minnow"
+COMPATIBLE_MACHINE = "minnow"
 KMACHINE_minnow  = "minnow"
 KBRANCH_minnow = "standard/minnow"
 
