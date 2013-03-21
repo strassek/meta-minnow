@@ -21,4 +21,5 @@ SRCREV_meta_pn-linux-yocto_minnow ?= "e57037f49c03547f05236c32aa024767dfce7d7f"
 SRCREV_emgd_pn-linux-yocto_minnow ?= "caea08c988e0f41103bbe18eafca20348f95da02"
 
 # Functionality flags
-KERNEL_FEATURES_append = " features/netfilter/netfilter.scc"
+KERNEL_FEATURES_minnow_append = " features/drm-emgd/drm-emgd-1.16 \
+                                  features/netfilter/netfilter.scc"
