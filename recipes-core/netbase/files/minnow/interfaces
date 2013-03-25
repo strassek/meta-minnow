@@ -7,3 +7,4 @@ iface lo inet loopback
 # Wired interfaces
 auto eth0
 iface eth0 inet dhcp
+    hwaddress ether RANDOM_MAC

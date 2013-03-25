@@ -2,4 +2,4 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 # Temporary: generate a random MAC until the firmware manages this for us
 RDEPENDS_${PN}_minnow_append = " genmac"
-PRINC := "${@int(PRINC) + 1}"
+PRINC := "${@int(PRINC) + 2}"
