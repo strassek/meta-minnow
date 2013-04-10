@@ -4,8 +4,8 @@ KBRANCH_DEFAULT = "standard/minnow"
 KBRANCH = "${KBRANCH_DEFAULT}"
 KMETA = "meta-danny"
 
-SRC_URI_minnow = "git://git.infradead.org/users/dvhart/linux-yocto-minnow-3.8;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},emgd-1.16;name=machine,meta,emgd"
-SRC_URI_minnow += "file://user.cfg"
+SRC_URI = "git://git.infradead.org/users/dvhart/linux-yocto-minnow-3.8;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},emgd-1.16;name=machine,meta,emgd"
+SRC_URI += "file://user.cfg"
 
 # SRCREVs for the default branches to avoid parse/fetch failures when
 # MACHINE != minnow. This can be removed once we convert this to a bbappend.
