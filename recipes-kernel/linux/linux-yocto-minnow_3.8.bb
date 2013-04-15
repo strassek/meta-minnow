@@ -10,7 +10,7 @@ SRC_URI = "git://git.infradead.org/users/dvhart/linux-yocto-minnow-3.8;protocol=
 
 # SRCREVs for the default branches to avoid parse/fetch failures when
 # MACHINE != minnow. This can be removed once we convert this to a bbappend.
-SRCREV_machine_pn-linux-yocto-minnow ?= "2abdf3d45805014d62dc680539dcffdc9bca5b8e"
+SRCREV_machine_pn-linux-yocto-minnow ?= "6aed797d87e57110f31970089b3486c790575ad3"
 #SRCREV_machine_pn-linux-yocto-minnow ?= "eadda01d959f96ed3d15d193a6cd8600ea4f97c9" # standard/minnow-x3 (9/apr/2013 @ 9:36 AM)
 SRCREV_meta_pn-linux-yocto-minnow ?= "e57037f49c03547f05236c32aa024767dfce7d7f"
 SRCREV_emgd_pn-linux-yocto-minnow ?= "caea08c988e0f41103bbe18eafca20348f95da02"
